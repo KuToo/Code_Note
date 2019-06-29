@@ -260,63 +260,62 @@
 - 补充知识点 
     1.每当一个进程启动时，系统会自动打开三个文件：标准输入、标准输出、标准错误。--对应三个文件：stdin(0),stdout(1),stderr(2),进程结束，系统自动关闭这三个文件
 
-#### 通道(channel) 
-- 定义：
-    1.是一种数据类型，对应一个“管道”（通道），主要用来解决Go程的同步问题以及Go程之间数据共享（数据传递）的问题
-    2.Goroutine运行在相同的地址空间，因此访问共享内存必须做好同步，Goroutine奉行通过通信来共享内存，而不是共享内存来通信
-    3.和map类似，channel也是一个对应make创建的底层数据结构的引用，```make(chan type,cap)```,其中cap=>缓冲区，cap=0无缓冲channel，cap>0有缓冲的channel,eg：make(chan int)
-    4.channel有两个端，
-        - 一端：写端（传入端）channel<-,
-        - 另一端：读端（传出端）<-channel
-    5.要求读端与写端必须同时满足条件，才在chan上进行数据流动，否则阻塞
-- channel数据同步
-    1.len(channel):channel中剩余未读取数据个数;cap(channel):通道的容量
-- 无缓存channel和有缓存channel
-    1.无缓存channel:
-        - 通道容量为0，len=0;
-        - channel应用于两个Go程中，一个读一个写;
-        - 具备同步的能力，读写同步。（打电话）
-    2.有缓存channel:
-        - 通道容量大于0;
-        - channel应用于两个Go程中，一个读一个写;
-        - 缓冲区可以进行数据的存储，存储至容量上限，阻塞，具备一部能力，不需要同事操作channel缓冲区（发短信）。
-    3.比较
-- 关闭channel
-    1.使用close(ch)关闭channel      
-    2.确定不向对端发送数据，关闭channel
-    3.对端可以判断channel是否关闭
+#### 通道(channel)    
+- 定义：   
+    1.是一种数据类型，对应一个“管道”（通道），主要用来解决Go程的同步问题以及Go程之间数据共享（数据传递）的问题   
+    2.Goroutine运行在相同的地址空间，因此访问共享内存必须做好同步，Goroutine奉行通过通信来共享内存，而不是共享内存来通信    
+    3.和map类似，channel也是一个对应make创建的底层数据结构的引用，```make(chan type,cap)```    ,其中cap=>缓冲区，cap=0无缓冲channel，cap>0有缓冲的channel,eg：make(chan int)  
+    4.channel有两个端，  
+        - 一端：写端（传入端）channel<-,  
+        - 另一端：读端（传出端）<-channel 
+    5.要求读端与写端必须同时满足条件，才在chan上进行数据流动，否则阻塞    
+- channel数据同步   
+    1.len(channel):channel中剩余未读取数据个数;cap(channel):通道的容量 
+- 无缓存channel和有缓存channel 
+    1.无缓存channel:   
+        - 通道容量为0，len=0; 
+        - channel应用于两个Go程中，一个读一个写;  
+        - 具备同步的能力，读写同步。（打电话）    
+    2.有缓存channel:   
+        - 通道容量大于0;  
+        - channel应用于两个Go程中，一个读一个写;  
+        - 缓冲区可以进行数据的存储，存储至容量上限，阻塞，具备一部能力，不需要同事操作channel缓冲区（发短信）。    
+    3.比较    
+- 关闭channel 
+    1.使用close(ch)关闭channel        
+    2.确定不向对端发送数据，关闭channel  
+    3.对端可以判断channel是否关闭     
         ```
-            if num,ok := <-ch;ok==true{
-                //如果对端没有关闭,ok-->true,numa保存独到的数据
-            }else{
-                //如果对端已经关闭,ok-->false,num无数据
-            }
+            if num,ok := <-ch;ok==true{ 
+                //如果对端没有关闭,ok-->true,numa保存独到的数据    
+            }else{  
+                //如果对端已经关闭,ok-->false,num无数据    
+            }   
         ```
-    4.可以使用range替代ok
+    4.可以使用range替代ok     
         ```
-            for num:=range ch{//ch不能替换为<-ch}
+            for num:=range ch{//ch不能替换为<-ch}    
         ```
-    5.数据不发送玩，不应该关闭
-    6.已经关闭的channel不能再向其写数据。报错:panic:send on closed channel
-    7.已经关闭的channel可以向其读数据。先读缓冲的数据，读完之后可以继续读取数据，值为0 
-- 单向channel
-    1.默认的channel是双向的 var ch chan int / ch :=make(chan int)
-    2.单向channel分为：
-        - 单向写channel：var sendCh chan <- int / sendCh := make(chan<- int)
-        - 单向读channel：var recvCh <- chan int / recvCh := make(<-chan int)
-    3.转换：
-        - 双向channel可以隐式转换为任意一种单向channel sendCh = ch  
-        - 单向channel不能转换为双向channel
-    4.传参（传引用）  
-- 生产者消费者模型
-    1.生产者：发送数据端
-    2.公共区(缓冲区):
-        - 解耦，降低生产者和消费者之间的耦合度
-        - 处理并发，生产者和消费者数量不对等时，能保持正常通信
-        - 缓存，生产者和消费者数据处理速度不一致时，暂存数据
-    3.消费者：接受数据端
-- 定时器Timer
-    
+    5.数据不发送玩，不应该关闭  
+    6.已经关闭的channel不能再向其写数据。报错:panic:send on closed channel  
+    7.已经关闭的channel可以向其读数据。先读缓冲的数据，读完之后可以继续读取数据，值为0  
+- 单向channel     
+    1.默认的channel是双向的 var ch chan int / ch :=make(chan int)  
+    2.单向channel分为：  
+        - 单向写channel：var sendCh chan <- int / sendCh := make(chan<- int)    
+        - 单向读channel：var recvCh <- chan int / recvCh := make(<-chan int)    
+    3.转换：   
+        - 双向channel可以隐式转换为任意一种单向channel sendCh = ch       
+        - 单向channel不能转换为双向channel   
+    4.传参（传引用）     
+- 生产者消费者模型  
+    1.生产者：发送数据端 
+    2.公共区(缓冲区): 
+        - 解耦，降低生产者和消费者之间的耦合度    
+        - 处理并发，生产者和消费者数量不对等时，能保持正常通信    
+        - 缓存，生产者和消费者数据处理速度不一致时，暂存数据 
+    3.消费者：接受数据端 
+- 定时器Timer  
     > 1.创建定时器，指定定时时长，定时到达后，系统会自动向定时器的成员C写系统当前时间（对chan的写事件）    
     > 2.读取Timer.C得到定时后的系统时间，并且完成一次chan的读操作    
     > 3.类型解析：
