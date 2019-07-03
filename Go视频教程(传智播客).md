@@ -325,3 +325,32 @@
             r tuntimeTimer
         }
     ```
+- 定时器的停止和重置   
+    1.创建定时器：myTimer :=time.NewTimer(2 * time.Second)     
+    2.停止定时器：myTimer.Stop()  
+    3.重置定时器：myTimer.Reset() 
+- 定时器周期定时   
+    1.创建：myTicker := time.NewTicker(time.Second)
+    
+#### select
+- 作用：监听多个channel上的数据流动
+- 语法：类似switch,case语句里面必须是IO（input,output）操作(读管道)，不可以任意写判别表达式
+- 注意事项     
+    1.监听case中，没有满足监听条件，阻塞   
+    2.监听case中，有多个满足监听条件，任意一个执行  
+    3.可以使用default来处理所有的case都不满足监听条件的状况。通常不用（会产生忙轮询） 
+    4.select自身不带有循环机制，需借助外层for循环监听  
+    5.break只能跳出select中的一个case，类似switch中的用法  
+- 超时处理  
+
+#### 锁
+- 死锁
+    1.单Go程自己死锁：channel应该至少2个以上go程间进行通信，否则死锁
+    2.Go程间channel访问顺序导致死锁：使用channel一端读（写），要保证另外一端写（读）操作同时有机会执行，否则死锁
+    3.多Go程，多channel交叉死锁
+    4.在Go语言中，尽量不要将互斥锁，读写锁与channel混用---隐性死锁
+- 互斥锁（建议锁：操作系统提供，建议你在编程时使用，不强制使用）
+    1.创建一个互斥量：var mutex sync.Mutex
+    2.两个成员属性：state(默认是未加锁),sema（零值）；两个成员方法：Lock(),Unlock()
+- 读写锁：读时共享，写时独占，写锁优先级比读锁高
+- 条件变量：本来不是锁，但经常与锁结合使用
