@@ -1,0 +1,15 @@
+# redis Dockerfile
+
+# 基础镜像
+FROM centos
+# 添加用户和用户组
+RUN groupadd -r redis && useradd -r -g redis
+# 安装redis
+RUN yum update && yum -y install redis
+# 复制配置文件
+RUN mkdir -p /config && chown -R redis:redis /config
+COPY . /config
+#设置工作目录
+WORKDIR /config
+#启动redis(启动容器时触发)
+CMD ["redis-server"]
