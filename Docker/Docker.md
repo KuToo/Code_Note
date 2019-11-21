@@ -249,11 +249,12 @@ iptables iptables是与Linux内核集成的包过滤防火墙系统，几乎所�
     
 2. 创建网络 
     ```
-        docker network create --subnet=192.168.0.1/24 swoft_network --attachable 可以手动附加容器 
-        --aux-address Auxiliary IPv4 or IPv6 addresses used by Network driver 
-        --config-from API 1.30+The network from which copying the configuration 
+        docker network create --subnet=192.168.0.1/24 swoft_network 
+        --attachable 允许手动附加容器 
+        --aux-address 使用IPv4或者IPv6地址作为网络驱动
+        --config-from 使用已经存在的配置 
         --config-only API 1.30+Create a configuration only network 
-        --driver , -d bridge Driver to manage the Network 
+        --driver , -d 配置连接方式 
         --gateway IPv4 or IPv6 Gateway for the master subnet 
         --ingress API 1.29+Create swarm routing-mesh network 
         --internal Restrict external access to the network 
