@@ -24,19 +24,19 @@ YAML支持以下几种数据类型
 * 还可以使用缩进表示层级关系
     
     ```
-        key:
-            child-key:value 
-            child-key2:value2
+    key:
+        child-key:value 
+        child-key2:value2
     ```
 * 较为复杂的对象格式，可以使用问号和一个空格代表一个复杂的key，配合一个冒号加一个空格代表value
 
     ```
-        ? 
-            - complexkey1
-            - complexkey2
-        : 
-            - complexvalue1
-            - complexvalue2
+    ? 
+        - complexkey1
+        - complexkey2
+    : 
+        - complexvalue1
+        - complexvalue2
     ```
     意思即对象的属性是一个数组[complexkey1,complexkey2]，对应的值也是一个数组[complexvalue1,complexvalue2]
 
@@ -44,19 +44,19 @@ YAML支持以下几种数据类型
 * 以 - 开头的行表示构成一个数组
 
     ```
-        - A
-        - B
-        - C
+    - A
+    - B
+    - C
     ```
 * YAML支持多维数组，可以使用行内表示
     `key:[value1,value2, ...]`
 * 数据结构的子成员是一个数组，则可以在该项下面缩进一个空格
     
     ```
-        -
-         - A
-         - B
-         - C
+    -
+     - A
+     - B
+     - C
     ```
 * 一个相对复杂的例子
 
@@ -106,71 +106,71 @@ YAML支持以下几种数据类型
 * 使用一个例子来快速了解纯量的基本使用
 
     ```
-        boolean: 
-            - TRUE  #true,True都可以
-            - FALSE  #false，False都可以
-        float:
-            - 3.14
-            - 6.8523015e+5  #可以使用科学计数法
-        int:
-            - 123
-            - 0b1010_0111_0100_1010_1110    #二进制表示
-        null:
-            nodeName: 'node'
-            parent: ~  #使用~表示null
-        string:
-            - 哈哈
-            - 'Hello world'  #可以使用双引号或者单引号包裹特殊字符
-            - newline
-              newline2    #字符串可以拆成多行，每一行会被转化成一个空格
-        date:
-            - 2018-02-17    #日期必须使用ISO 8601格式，即yyyy-MM-dd
-        datetime: 
-            -  2018-02-17T15:02:31+08:00    #时间使用ISO 8601格式，时间和日期之间使用T连接，最后使用+代表时区
+    boolean: 
+        - TRUE  #true,True都可以
+        - FALSE  #false，False都可以
+    float:
+        - 3.14
+        - 6.8523015e+5  #可以使用科学计数法
+    int:
+        - 123
+        - 0b1010_0111_0100_1010_1110    #二进制表示
+    null:
+        nodeName: 'node'
+        parent: ~  #使用~表示null
+    string:
+        - 哈哈
+        - 'Hello world'  #可以使用双引号或者单引号包裹特殊字符
+        - newline
+          newline2    #字符串可以拆成多行，每一行会被转化成一个空格
+    date:
+        - 2018-02-17    #日期必须使用ISO 8601格式，即yyyy-MM-dd
+    datetime: 
+        -  2018-02-17T15:02:31+08:00    #时间使用ISO 8601格式，时间和日期之间使用T连接，最后使用+代表时区
     ```
     
 ## 引用
 **&** 锚点和`<span class="marked">*别名`，可以用来引用
     
     ```
-        defaults: &defaults
-          adapter:  postgres
-          host:     localhost
-        
-        development:
-          database: myapp_development
-          <<: *defaults
-        
-        test:
-          database: myapp_test
-          <<: *defaults
+    defaults: &defaults
+      adapter:  postgres
+      host:     localhost
+    
+    development:
+      database: myapp_development
+      <<: *defaults
+    
+    test:
+      database: myapp_test
+      <<: *defaults
     ```    
     
 相当于
 
     ```
-        defaults:
-          adapter:  postgres
-          host:     localhost
-        
-        development:
-          database: myapp_development
-          adapter:  postgres
-          host:     localhost
-        
-        test:
-          database: myapp_test
-          adapter:  postgres
-          host:     localhost
+    defaults:
+      adapter:  postgres
+      host:     localhost
+    
+    development:
+      database: myapp_development
+      adapter:  postgres
+      host:     localhost
+    
+    test:
+      database: myapp_test
+      adapter:  postgres
+      host:     localhost
     ```
 **&** 用来建立锚点（defaults），<<表示合并到当前数据，*用来引用锚点
     
     ```
-        - &showell Steve 
-        - Clark 
-        - Brian 
-        - Oren 
-        - *showell
+    - &showell Steve 
+    - Clark 
+    - Brian 
+    - Oren 
+    - *showell
     ```
 ## 其他相关文档链接
 * [https://www.ruanyifeng.com/blog/2016/07/yaml.html](https://www.ruanyifeng.com/blog/2016/07/yaml.html)
