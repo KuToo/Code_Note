@@ -37,6 +37,7 @@
     `sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose`
 4. 测试是否安装成功：
     `docker-compose --version`
+
 **注意:** 对于 alpine，需要以下依赖包： py-pip，python-dev，libffi-dev，openssl-dev，gcc，libc-dev，和 make
 
 ## 使用
